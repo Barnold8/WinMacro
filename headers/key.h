@@ -1,3 +1,6 @@
+#ifndef KEY_H
+#define KEY_H
+
 #include "windows.h"
 typedef struct{
     
@@ -8,9 +11,12 @@ typedef struct{
 }keyPress;
 
 
-struct keys
+typedef struct keys
 {
     keyPress *items;
     size_t count;
     size_t capacity;
+
 }keys;
+
+#endif
