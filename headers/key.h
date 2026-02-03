@@ -11,12 +11,12 @@ typedef struct{
 }keyPress;
 
 
-typedef struct keys
+typedef struct keyPresses
 {
     keyPress *items;
     size_t count;
     size_t capacity;
 
-}keys;
+}keyPresses;
 
 #endif
