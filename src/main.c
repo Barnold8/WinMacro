@@ -13,8 +13,12 @@ void printKeys(){
     for(int i = 0; i < pressed_keys.count; ++i){
         printf("CHAR %c\n",pressed_keys.items[i]);
     }
-
 }
+
+
+// TODO: if a key is pressed down, it goes to the pressed_keys array
+//      if the key goes up, the key is removed from the array
+//      on a key add event, check if the current combination fits into a user defined shortcut
 
 int main(){
 
