@@ -1,18 +1,28 @@
 #include "stdio.h"
-#include "windows.h"
+#include "../headers/memory.h"
+#include "../headers/key.h" // this includes windows.h so no need to do it again here
 
 HHOOK keyboard_listener;
 
 LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam);
 
+keyPresses pressed_keys = {0};
+
+
+void printKeys(){
+    for(int i = 0; i < pressed_keys.count; ++i){
+        printf("CHAR %c\n",pressed_keys.items[i]);
+    }
+
+}
+
 int main(){
 
     HHOOK keyboard_listener =  SetWindowsHookExA(WH_KEYBOARD_LL,keyHandler,0,0);
-
     if (keyboard_listener == NULL)
     {
         printf("ERROR CREATING HOOK");
-        printf("%d",GetLastError());
+        printf("Error code: %d",GetLastError());
         getchar();
         return 0;
     }
@@ -30,6 +40,10 @@ int main(){
 
     UnhookWindowsHookEx(keyboard_listener);
 
+    if(pressed_keys.items != NULL){
+        free(pressed_keys.items);
+    }
+
     return 0;
 }
 
@@ -40,9 +54,24 @@ void handleKeyPress(WPARAM wParam, LPARAM lParam){
     switch(wParam){
         case WM_KEYDOWN:
         {
-            printf("Keydown-Key     : [CHAR: %c] [DWORD: %lu]\n",test->vkCode,test->vkCode);
-            printf("Keydown-ScanCode: [CHAR: %c] [DWORD: %lu]\n",test->scanCode,test->scanCode);
-            printf("Time? %lu\n",test->time);
+
+            keyPress key = {
+                    test->vkCode,
+                    test->time,
+            };
+            if(test->vkCode == 32){
+                printKeys();
+            }else{
+                
+                da_append(pressed_keys,key);
+
+                printf("COUNT %d\n",pressed_keys.count);
+                printf("Keydown-Key     : [CHAR: %c] [DWORD: %lu]\n",test->vkCode,test->vkCode);
+                printf("Keydown-ScanCode: [CHAR: %c] [DWORD: %lu]\n",test->scanCode,test->scanCode);
+                printf("Time? %lu\n",test->time);
+            }
+
+  
         }
     }
 
