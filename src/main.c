@@ -9,10 +9,86 @@ LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam);
 keyPresses pressed_keys = {0};
 
 
+unsigned int readBits(DWORD data,int beginning, int end){
+
+    unsigned int mask = 0;
+    for (int i = beginning; i <= end; i++) {
+        mask = mask | (1 << i);
+    }
+
+    unsigned int extracted_bits = (data & mask) >> 4;
+
+    return extracted_bits;
+}
+
 void printKeys(){
     for(int i = 0; i < pressed_keys.count; ++i){
         printf("CHAR %c\n",pressed_keys.items[i]);
     }
+}
+
+void addKeyToArray(keyPress key){
+    printf("%c was lowered\n",key.keyCode);
+
+    da_append(pressed_keys,key);
+}
+
+void removeKeyFromArray(DWORD keyCode){
+    // Remove key from array
+    for (int i = 0; i < pressed_keys.count; i++){
+        if(pressed_keys.items[i].keyCode == keyCode){
+            printf("%c was lifted\n",pressed_keys.items[i].keyCode);
+        }
+    }
+}
+
+
+
+void handleKeyPress(WPARAM wParam, LPARAM lParam){
+
+    struct tagKBDLLHOOKSTRUCT* test = (struct tagKBDLLHOOKSTRUCT *)lParam;
+
+    switch(wParam){
+        case WM_KEYDOWN:
+        {
+
+            keyPress key = {
+                    test->vkCode,
+                    test->time,
+            };
+
+            addKeyToArray(key);
+            printf("Added %c\n",key.keyCode);            
+            break;
+        }
+        case WM_KEYUP:
+        {   
+            
+
+            break;
+           
+        }
+    }
+
+
+    
+
+}
+
+LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam)
+{
+  
+  // Checks whether params contain action about keystroke
+  if (nCode == HC_ACTION)
+  {
+    //lparam holds the info but i cant fucking use it normally cos windows code is fucking dogshit
+    //  LPARAM is a long_ptr which is one of those stupid fucking windows type defs that just make code harder to write
+    handleKeyPress(wParam,lParam);
+  }
+  
+
+  return CallNextHookEx(keyboard_listener, nCode,
+                        wParam, lParam);
 }
 
 
@@ -49,50 +125,4 @@ int main(){
     }
 
     return 0;
-}
-
-void handleKeyPress(WPARAM wParam, LPARAM lParam){
-
-    struct tagKBDLLHOOKSTRUCT* test = (struct tagKBDLLHOOKSTRUCT *)lParam;
-
-    switch(wParam){
-        case WM_KEYDOWN:
-        {
-
-            keyPress key = {
-                    test->vkCode,
-                    test->time,
-            };
-            if(test->vkCode == 32){
-                printKeys();
-            }else{
-                
-                da_append(pressed_keys,key);
-
-                printf("COUNT %d\n",pressed_keys.count);
-                printf("Keydown-Key     : [CHAR: %c] [DWORD: %lu]\n",test->vkCode,test->vkCode);
-                printf("Keydown-ScanCode: [CHAR: %c] [DWORD: %lu]\n",test->scanCode,test->scanCode);
-                printf("Time? %lu\n",test->time);
-            }
-
-  
-        }
-    }
-
-}
-
-LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam)
-{
-  
-  // Checks whether params contain action about keystroke
-  if (nCode == HC_ACTION)
-  {
-    //lparam holds the info but i cant fucking use it normally cos windows code is fucking dogshit
-    //  LPARAM is a long_ptr which is one of those stupid fucking windows type defs that just make code harder to write
-    handleKeyPress(wParam,lParam);
-  }
-  
-
-  return CallNextHookEx(keyboard_listener, nCode,
-                        wParam, lParam);
 }

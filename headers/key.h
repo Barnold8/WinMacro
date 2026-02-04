@@ -2,6 +2,7 @@
 #define KEY_H
 
 #include "windows.h"
+
 typedef struct{
     
     DWORD keyCode;
