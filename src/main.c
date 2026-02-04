@@ -16,13 +16,15 @@ void printKeys(){
 
 void addKeyToArray(keyPress key){
    
+    BOOL hasKey = 0; // Windows slop type which is an int, so it doesnt even save space, its just shit.
+
     for(int i = 0; i < pressed_keys.count; ++i){
-        if(pressed_keys.items[i].keyCode != key.keyCode){
-            da_append(pressed_keys,key);
+        if(pressed_keys.items[i].keyCode == key.keyCode){
+            hasKey = 1;
         }
     }
 
-    if(pressed_keys.count == 0){
+    if(hasKey == 0){
         da_append(pressed_keys,key);
     }
     
