@@ -3,10 +3,11 @@
 #include "../headers/key.h"
 
 HHOOK keyboard_listener;
-
 LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam);
-
 keyPresses pressed_keys = {0};
+
+BOOL DELETING = 0;
+
 
 void printKeys(){
     for(int i = 0; i < pressed_keys.count; ++i){
@@ -34,16 +35,21 @@ void removeKeyFromArray(DWORD keyCode){
     // Remove key from array
     for (int i = 0; i < pressed_keys.count; i++){
         if(pressed_keys.items[i].keyCode == keyCode){
-            printf("%c was lifted\n",pressed_keys.items[i].keyCode);
+            //SWAP i with last elem
+                pressed_keys.items[i] = pressed_keys.items[--pressed_keys.count];
         }
     }
+
+    if(pressed_keys.count == 1){
+        pressed_keys.count = 0; // allow whatever is left to be overwritten
+    }  
 }
 
 
 
 void handleKeyPress(WPARAM wParam, LPARAM lParam){
 
-    struct tagKBDLLHOOKSTRUCT* test = (struct tagKBDLLHOOKSTRUCT *)lParam;
+    struct tagKBDLLHOOKSTRUCT* keyInfo = (struct tagKBDLLHOOKSTRUCT *)lParam;
 
     switch(wParam){
         case WM_KEYDOWN: // Do I do a check in the array if it exists and if not dont add? but thats O(n). Granted on a small data structure
@@ -56,41 +62,49 @@ void handleKeyPress(WPARAM wParam, LPARAM lParam){
             // WORD isPressed = lParam & (1 << 30);
             // WORD isPressed_i = lParam & (1 << 30);
             // WORD wRepeatCount = (WORD)(lParam & 0x0000FFFF);
-
             // printf("%d count\n",count);
             // printf("%d isPressed (30)\n",isPressed);
             // printf("%d isPressed (31)\n",isPressed_i);
             // printf("%d flags 30\n",test->flags & (1<<30));
             // printf("%d flags 31\n",test->flags & (1<<31));
             // printf("%d REPEAT COUNT %d\n",wRepeatCount);
-
             // going to have to check every element to see if vkcode is in it, which is STUPID. but fucking microsoft documentation 
             // is fucking shit and I hate whatever troglodyte fucking wrote it. 
-
-
             // WORD keyFlags = HIWORD(lParam); // LOOK <- EVEN THE CODE IN THEIR OFFICIAL DOCS SUCKS COCK
-
             // BOOL wasKeyDown = (keyFlags & KF_REPEAT) == KF_REPEAT;
-
             // printf("BOOL %d\n",wasKeyDown);
 
             keyPress key = {
-                    test->vkCode,
-                    test->time,
+                    keyInfo->vkCode,
+                    keyInfo->time,
             };
 
             addKeyToArray(key);
-        
-                 printKeys(); 
+            
+            
             break;
 
         }
         case WM_KEYUP:
         {   
+
+            if(pressed_keys.count > 0 && DELETING == 0){
+                printf("Keys that were held down:\n");
+                printKeys();
+            }
+            if(pressed_keys.count > 0 && DELETING == 0){ // global variable logic to know WHEN to perform shortcut key lookup
+
+                DELETING = 1;
+            }
+
+            else if(pressed_keys.count == 0){ 
+                DELETING = 0;
+            }
+
             
 
-            break;
-           
+            removeKeyFromArray(keyInfo->vkCode);
+            break;  
         }
     }
 }
