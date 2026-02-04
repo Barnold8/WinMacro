@@ -1,12 +1,12 @@
 #include "stdio.h"
 #include "../headers/memory.h"
 #include "../headers/key.h"
+#include "../headers/custom_string.h"
 
 HHOOK keyboard_listener;
 LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam);
 keyPresses pressed_keys = {0};
 BOOL DELETING = 0;
-
 
 void printKeys(){
     for(int i = 0; i < pressed_keys.count; ++i){
@@ -98,8 +98,6 @@ void handleKeyPress(WPARAM wParam, LPARAM lParam){
                 DELETING = 0;
             }
 
-            
-
             removeKeyFromArray(keyInfo->vkCode);
             break;  
         }
@@ -122,37 +120,46 @@ LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam)
                         wParam, lParam);
 }
 
+// TODO: Make a file type that defines a shortcut with its .dll file
+    // read file and evaluate shortcut string to an integer
+        // split string function, String* string_split(string,delim)
+    // find hashmap library and use to use shortcut integer as key and dll function as value (maybe, need to figure it out)
 
-// TODO: if a key is pressed down, it goes to the pressed_keys array
-//      if the key goes up, the key is removed from the array
-//      on a key add event, check if the current combination fits into a user defined shortcut
+// TODO: check for mem leaks on windows... yaaaaay
 
 int main(){
 
-    HHOOK keyboard_listener =  SetWindowsHookExA(WH_KEYBOARD_LL,keyHandler,0,0);
-    if (keyboard_listener == NULL)
-    {
-        printf("ERROR CREATING HOOK");
-        printf("Error code: %d",GetLastError());
-        getchar();
-        return 0;
-    }
+    // HHOOK keyboard_listener =  SetWindowsHookExA(WH_KEYBOARD_LL,keyHandler,0,0);
+    // if (keyboard_listener == NULL)
+    // {
+    //     printf("ERROR CREATING HOOK");
+    //     printf("Error code: %d",GetLastError());
+    //     getchar();
+    //     return 0;
+    // }
 
-    MSG message;
+    // MSG message;
 
-    while (GetMessage(&message, NULL, 0, 0) != 0)
-    {
-        TranslateMessage(&message);
-        DispatchMessage(&message);
-    }
+    // while (GetMessage(&message, NULL, 0, 0) != 0)
+    // {
+    //     TranslateMessage(&message);
+    //     DispatchMessage(&message);
+    // }
 
-    printf("Press any key to quit...");
-    getchar();
+    // printf("Press any key to quit...");
+    // getchar();
 
-    UnhookWindowsHookEx(keyboard_listener);
+    // UnhookWindowsHookEx(keyboard_listener);
 
-    if(pressed_keys.items != NULL){
-        free(pressed_keys.items);
+    // if(pressed_keys.items != NULL){
+    //     free(pressed_keys.items);
+    // }
+
+    StringBuilder testString = new_string("Hello world!\n");
+    StringArray strings      = split_string(&testString,' ');
+
+    for(int i = 0; i < strings.count; ++i){
+        printf("String in split strings[%d] %s\n",i,strings.items[i].items);
     }
 
     return 0;
