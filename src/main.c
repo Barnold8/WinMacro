@@ -5,7 +5,6 @@
 HHOOK keyboard_listener;
 LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam);
 keyPresses pressed_keys = {0};
-
 BOOL DELETING = 0;
 
 
@@ -44,8 +43,6 @@ void removeKeyFromArray(DWORD keyCode){
         pressed_keys.count = 0; // allow whatever is left to be overwritten
     }  
 }
-
-
 
 void handleKeyPress(WPARAM wParam, LPARAM lParam){
 
