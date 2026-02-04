@@ -1,6 +1,6 @@
 #include "stdio.h"
 #include "../headers/memory.h"
-#include "../headers/key.h" // this includes windows.h so no need to do it again here
+#include "../headers/key.h"
 
 HHOOK keyboard_listener;
 
@@ -8,29 +8,24 @@ LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam);
 
 keyPresses pressed_keys = {0};
 
-
-unsigned int readBits(DWORD data,int beginning, int end){
-
-    unsigned int mask = 0;
-    for (int i = beginning; i <= end; i++) {
-        mask = mask | (1 << i);
-    }
-
-    unsigned int extracted_bits = (data & mask) >> 4;
-
-    return extracted_bits;
-}
-
 void printKeys(){
     for(int i = 0; i < pressed_keys.count; ++i){
-        printf("CHAR %c\n",pressed_keys.items[i]);
+        printf("CHAR[%d] %c\n",i,pressed_keys.items[i]);
     }
 }
 
 void addKeyToArray(keyPress key){
-    printf("%c was lowered\n",key.keyCode);
+   
+    for(int i = 0; i < pressed_keys.count; ++i){
+        if(pressed_keys.items[i].keyCode != key.keyCode){
+            
+        }
+    }
 
-    da_append(pressed_keys,key);
+    if(pressed_keys.count == 0){
+        da_append(pressed_keys,key);
+    }
+    
 }
 
 void removeKeyFromArray(DWORD keyCode){
@@ -49,8 +44,33 @@ void handleKeyPress(WPARAM wParam, LPARAM lParam){
     struct tagKBDLLHOOKSTRUCT* test = (struct tagKBDLLHOOKSTRUCT *)lParam;
 
     switch(wParam){
-        case WM_KEYDOWN:
+        case WM_KEYDOWN: // Do I do a check in the array if it exists and if not dont add? but thats O(n). Granted on a small data structure
         {
+            // DWORD isDown = test->flags & 0x40000000; 
+            // for(int i = 0; i < 32; i++){
+            //     printf("BIT %d",test->flags >> i);
+            // }
+            // WORD count = (lParam >> 0) & ((1<<15)-1);
+            // WORD isPressed = lParam & (1 << 30);
+            // WORD isPressed_i = lParam & (1 << 30);
+            // WORD wRepeatCount = (WORD)(lParam & 0x0000FFFF);
+
+            // printf("%d count\n",count);
+            // printf("%d isPressed (30)\n",isPressed);
+            // printf("%d isPressed (31)\n",isPressed_i);
+            // printf("%d flags 30\n",test->flags & (1<<30));
+            // printf("%d flags 31\n",test->flags & (1<<31));
+            // printf("%d REPEAT COUNT %d\n",wRepeatCount);
+
+            // going to have to check every element to see if vkcode is in it, which is STUPID. but fucking microsoft documentation 
+            // is fucking shit and I hate whatever troglodyte fucking wrote it. 
+
+
+            // WORD keyFlags = HIWORD(lParam); // LOOK <- EVEN THE CODE IN THEIR OFFICIAL DOCS SUCKS COCK
+
+            // BOOL wasKeyDown = (keyFlags & KF_REPEAT) == KF_REPEAT;
+
+            // printf("BOOL %d\n",wasKeyDown);
 
             keyPress key = {
                     test->vkCode,
@@ -58,8 +78,10 @@ void handleKeyPress(WPARAM wParam, LPARAM lParam){
             };
 
             addKeyToArray(key);
-            printf("Added %c\n",key.keyCode);            
+        
+                 printKeys(); 
             break;
+
         }
         case WM_KEYUP:
         {   
@@ -69,10 +91,6 @@ void handleKeyPress(WPARAM wParam, LPARAM lParam){
            
         }
     }
-
-
-    
-
 }
 
 LRESULT CALLBACK keyHandler(int nCode, WPARAM wParam, LPARAM lParam)
