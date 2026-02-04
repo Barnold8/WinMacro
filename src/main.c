@@ -18,7 +18,7 @@ void addKeyToArray(keyPress key){
    
     for(int i = 0; i < pressed_keys.count; ++i){
         if(pressed_keys.items[i].keyCode != key.keyCode){
-            
+            da_append(pressed_keys,key);
         }
     }
 
