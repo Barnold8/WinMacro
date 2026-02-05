@@ -3,6 +3,7 @@
 
 
 #include "custom_string.h" 
+#include "key.h"
 
 
 int calculate_shortcut(StringBuilder* shortcut){
@@ -16,6 +17,17 @@ int calculate_shortcut(StringBuilder* shortcut){
 
     return  (sum > 0) ? sum : -1; // cant figure it out, return error code
 }
+
+int calculate_shortcut_with_keys(keyPresses* keys){
+    int mask = 0;
+
+    for(size_t i = 0; i < keys->count; i++){
+        mask |= keys->items[i].keyCode; // the char will be the 0th element so this is fine
+    }
+
+    return mask;
+}
+
 
 
 int calculate_shortcut_and_free(StringBuilder* shortcut){
