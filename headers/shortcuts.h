@@ -1,28 +1,26 @@
 #ifndef SHORTCUTS_H
 #define SHORTCUTS_H
 
-
 #include "custom_string.h" 
 #include "key.h"
 
 
 int calculate_shortcut(StringBuilder* shortcut){
 
-    StringArray tokens = split_string(shortcut,'+');
-    int sum = 0;
+    long int mask = 0;
 
-    for(size_t i = 0; i < tokens.count; i++){
-        sum += tokens.items[i].items[0]; // the char will be the 0th element so this is fine
+    for(size_t i = 0; i < shortcut->count; i++){
+        int bit = shortcut->items[i] - 'a'; // -a to remove
+        mask |= (1L << bit);
     }
-
-    return  (sum > 0) ? sum : -1; // cant figure it out, return error code
 }
 
-int calculate_shortcut_with_keys(keyPresses* keys){
-    int mask = 0;
+long int calculate_shortcut_with_keys(keyPresses* keys){
+    long int mask = 0;
 
     for(size_t i = 0; i < keys->count; i++){
-        mask |= keys->items[i].keyCode; // the char will be the 0th element so this is fine
+        int bit = keys->items[i].keyCode - 'a';
+        mask |= (1L << bit);
     }
 
     return mask;
