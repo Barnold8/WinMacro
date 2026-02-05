@@ -1,6 +1,8 @@
 #include "stdio.h"
 #include "../headers/custom_string.h"
-
+#include "../headers/handle_key.h"
+#include "../headers/shortcuts.h"
+#include "string.h"
 
 // TODO: Make a file type that defines a shortcut with its .dll file
     // read file and evaluate shortcut string to an integer
