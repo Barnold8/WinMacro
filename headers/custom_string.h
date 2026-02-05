@@ -1,9 +1,10 @@
 #ifndef CUSTOM_STRING_H
-#define CUSTOM_SRING_H
+#define CUSTOM_STRING_H
 
 #include <string.h>
-
 #include <stdio.h>
+#include <stdlib.h>
+#include "memory.h"
 
 typedef struct{
     
@@ -48,7 +49,7 @@ void generate_string(StringBuilder* heap_string,char* stack_string){
 void generate_string_verbose(StringBuilder* heap_string,char* stack_string){
     // Wrapper function for generate_string but only accepts empty strings
 
-    if(heap_string->count > 0){
+    if(heap_string->count > 0 || stack_string == NULL){
         return;
     }
     generate_string(heap_string,stack_string);
