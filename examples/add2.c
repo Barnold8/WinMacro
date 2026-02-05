@@ -8,9 +8,9 @@ int add2(int num){
 
 __declspec( dllexport ) int _dll_main (){
    
-   int n = 2;
-   
-   return add2(n);
+   int n = 67;
+
+   printf("%d + 2 = %d\n",n,add2(n));
 
    // if failure return none 0 exit code
 }
