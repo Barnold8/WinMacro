@@ -33,6 +33,9 @@ StringBuilder new_string(char* stack_string){
         da_append(new_string,stack_string[i]);
         i++;
     }
+
+    da_append(new_string,'\0');
+
     return new_string;
 }
 
@@ -42,6 +45,12 @@ void generate_string(StringBuilder* heap_string,char* stack_string){
     while(stack_string[i] != '\0'){
         da_append((*heap_string),stack_string[i]);
         i++;
+    }
+
+    int stringLen = heap_string->count;
+
+    if(heap_string->items[stringLen] != '\0'){
+        da_append((*heap_string),'\0');   
     }
 
 }
