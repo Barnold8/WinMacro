@@ -59,15 +59,18 @@ void generate_string_verbose(StringBuilder* heap_string,char* stack_string){
 
 StringArray split_string(StringBuilder * string,char delim){
     
+    char _delim[2] = {delim,'\0'};
+
     StringArray splitString = {0};
-    char* tempString = strtok(string->items, delim);
+    char* tempString = strtok(string->items, _delim);
 
     while(tempString != NULL){
         da_append(
             splitString,new_string(tempString)
         );
-        tempString = strtok(NULL, " ");
+        tempString = strtok(NULL, _delim);
     }
+
     return splitString;
 }
 
