@@ -60,7 +60,7 @@ void generate_string_verbose(StringBuilder* heap_string,char* stack_string){
 StringArray split_string(StringBuilder * string,char delim){
     
     StringArray splitString = {0};
-    char* tempString = strtok(string->items, " ");
+    char* tempString = strtok(string->items, delim);
 
     while(tempString != NULL){
         da_append(
