@@ -1,8 +1,6 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#include "windows.h"
-
 #define da_append(xs,x)\
     do {\
         if (xs.count >= xs.capacity){\
@@ -14,18 +12,6 @@
     } while(0)
 
 #endif
-
-unsigned int readBits(DWORD data,int beginning, int end){
-
-    unsigned int mask = 0;
-    for (int i = beginning; i <= end; i++) {
-        mask = mask | (1 << i);
-    }
-
-    unsigned int extracted_bits = (data & mask) >> 4;
-
-    return extracted_bits;
-}
 
 // all we need above for a dynamic array in C :)
 
