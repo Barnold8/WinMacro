@@ -20,4 +20,15 @@ typedef struct keyPresses
 
 }keyPresses;
 
+
+char* keyPresses_to_string(keyPresses* keyArray){
+
+    char* string = malloc(sizeof(char)*keyArray->count);
+
+    for(int i = 0; i < keyArray->count; i++){
+        string[i] = keyArray->items[i].keyCode;
+    }
+    return string;
+}
+
 #endif
