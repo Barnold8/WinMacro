@@ -77,10 +77,14 @@ void handleKeyPress(WPARAM wParam, LPARAM lParam){
             if(pressed_keys.count > 0 && DELETING == 0){
                 // printf("Keys that were held down:\n");
                 // printKeys();
-                generate_string_verbose(&shortcut,"a+b+c");
-                calculate_shortcut(&shortcut);
-                
+                // printf("User generated key %d\n",key);
+
+                // use this key to index a hashmap 
+                long key = calculate_shortcut_with_keys(&pressed_keys);
+
             }
+
+
             if(pressed_keys.count > 0 && DELETING == 0){ // global variable logic to know WHEN to perform shortcut key lookup
 
                 DELETING = 1;
