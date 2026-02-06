@@ -11,7 +11,7 @@ __declspec( dllexport ) int _dll_main (){
    int n = 67;
 
    printf("%d + 2 = %d\n",n,add2(n));
-
-   // if failure return none 0 exit code
+   
+   return 0; // if failure return none 0 exit code
 }
 
