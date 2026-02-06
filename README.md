@@ -1,3 +1,5 @@
+# THIS IS NOT COMPLETE - NO FUNCTIONALITY IS AVAILABLE YET
+
 # WinMacro
 
 ## Requirements
