@@ -13,4 +13,8 @@
 struct {long int key; int value;} *hash = NULL; // need to decide what to use as the value type, for now int is just for viewing
 
 
+    // int i=0;
+    // hmput(hash, i, 12);
+    // printf("AT KEY %d is %d\n",i,hmget(hash,i));
+
 #endif
